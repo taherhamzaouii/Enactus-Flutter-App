@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-class TasksScreen extends StatefulWidget {
-  static String id = 'TasksScreen';
+class TasksView extends StatefulWidget {
+  static String id = 'TasksView';
 
   @override
-  _TasksScreenState createState() => _TasksScreenState();
+  _TasksViewState createState() => _TasksViewState();
 }
 
-class _TasksScreenState extends State<TasksScreen> {
+class _TasksViewState extends State<TasksView> {
   String todoTitle = "";
 
   createTodos() {
@@ -35,37 +35,6 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.amber,
-        onPressed: () {
-          showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8)),
-                  title: Text("Add Todolist"),
-                  content: TextField(
-                    onChanged: (String value) {
-                      todoTitle = value;
-                    },
-                  ),
-                  actions: <Widget>[
-                    FlatButton(
-                        onPressed: () {
-                          createTodos();
-                          Navigator.of(context).pop();
-                        },
-                        child: Text("Add"))
-                  ],
-                );
-              });
-        },
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-      ),
       body: StreamBuilder(
           stream: Firestore.instance.collection("MyTodos").snapshots(),
           builder: (context, snapshots) {
@@ -77,9 +46,6 @@ class _TasksScreenState extends State<TasksScreen> {
                     DocumentSnapshot documentSnapshot =
                     snapshots.data.documents[index];
                     return Dismissible(
-                        onDismissed: (direction) {
-                          deleteTodos(documentSnapshot["todoTitle"]);
-                        },
                         key: Key(documentSnapshot["todoTitle"]),
                         child: Card(
                           color: Colors.amber,
@@ -89,14 +55,6 @@ class _TasksScreenState extends State<TasksScreen> {
                               borderRadius: BorderRadius.circular(8)),
                           child: ListTile(
                             title: Text(documentSnapshot["todoTitle"]),
-                            trailing: IconButton(
-                                icon: Icon(
-                                  Icons.delete,
-                                  color: Colors.black,
-                                ),
-                                onPressed: () {
-                                  deleteTodos(documentSnapshot["todoTitle"]);
-                                }),
                           ),
                         ));
                   });

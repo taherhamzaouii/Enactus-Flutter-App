@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:manageus_flutter/Models/Data.dart';
 import 'package:manageus_flutter/Provider/AdminMode.dart';
 import 'package:manageus_flutter/screens/signup_screen.dart';
+import 'package:manageus_flutter/services/ApiClient.dart';
 import 'package:manageus_flutter/widgets/CustomTextField.dart';
 import 'package:manageus_flutter/services/auth.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -142,6 +144,11 @@ class LoginScreen extends StatelessWidget {
             Scaffold.of(context).showSnackBar(SnackBar(
               content: Text(e.message),
             ));
+          }
+          ApiClient api = ApiClient();
+          if(Data.projects.length == 0){
+            List<dynamic> allProjects = await api.getAllProjects();
+
           }
         }
        else {

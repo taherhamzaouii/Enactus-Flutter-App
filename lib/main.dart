@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:manageus_flutter/Provider/AdminMode.dart';
 import 'package:manageus_flutter/Provider/ModalHud.dart';
 import 'package:manageus_flutter/screens/Admin/MembersScreen.dart';
+import 'package:manageus_flutter/screens/Admin/Partner/AddP.dart';
+import 'package:manageus_flutter/screens/Admin/Partner/AddPartner.dart';
 import 'package:manageus_flutter/screens/Admin/PartnersScreen.dart';
+import 'package:manageus_flutter/screens/Admin/Project/AddProject.dart';
 import 'package:manageus_flutter/screens/Admin/ProjectsScreen.dart';
 import 'package:manageus_flutter/screens/Admin/TasksScreen.dart';
+import 'package:manageus_flutter/screens/User/TasksView.dart';
+import 'package:manageus_flutter/screens/UserProfile.dart';
 import 'package:manageus_flutter/screens/login_screen.dart';
 import 'package:manageus_flutter/screens/signup_screen.dart';
 import 'package:manageus_flutter/screens/Admin/AdminHome.dart';
@@ -42,9 +47,15 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
           AdminHome.id: (context) => AdminHome(),
           UserHome.id: (context) => UserHome(),
           MembersScreen.id: (context) => MembersScreen(),
-          PartnerScreen.id: (context) => PartnerScreen(),
+          PartnersScreen.id: (context) => PartnersScreen(),
           TasksScreen.id: (context) => TasksScreen(),
           ProjectsScreen.id: (context) => ProjectsScreen(),
+          AddProject.id: (context) => AddProject(),
+          AddPartner.id: (context) => AddPartner(),
+          UserProfile.id: (context) => UserProfile(),
+          TasksView.id: (context) => TasksView(),
+          AddP.id: (context) => AddP(),
+
         },
       ),
 
