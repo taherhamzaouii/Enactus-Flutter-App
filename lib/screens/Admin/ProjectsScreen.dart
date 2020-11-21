@@ -127,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               subtitle: Text(
-                                doc.data()['desc'],
+                                doc.data()['category'],
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 12.0),
                               ),

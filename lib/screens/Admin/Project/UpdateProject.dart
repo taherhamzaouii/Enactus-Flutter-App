@@ -209,11 +209,11 @@ class _MyUpdatePageState extends State<MyUpdatePage> {
                   SizedBox(height: 15,),
                   Container(
                     child: TextFormField(
-                      controller: descInputController,
+                      controller: locationInputController,
                       decoration: InputDecoration(
                         hintText: "Enter Project Location",
                         prefixIcon: Icon(
-                          Icons.account_balance,
+                          Icons.location_on_rounded,
                           color: Colors.amber,
                         ),
                         filled: true,
@@ -239,11 +239,11 @@ class _MyUpdatePageState extends State<MyUpdatePage> {
                   SizedBox(height: 15,),
                   Container(
                     child: TextFormField(
-                      controller: descInputController,
+                      controller: categoryInputController,
                       decoration: InputDecoration(
                         hintText: "Enter Project Category",
                         prefixIcon: Icon(
-                          Icons.account_balance,
+                          Icons.category,
                           color: Colors.amber,
                         ),
                         filled: true,
