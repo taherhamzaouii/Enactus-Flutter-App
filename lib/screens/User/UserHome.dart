@@ -6,6 +6,8 @@ import 'package:manageus_flutter/screens/Admin/MembersScreen.dart';
 import 'package:manageus_flutter/screens/Admin/PartnersScreen.dart';
 import 'package:manageus_flutter/screens/Admin/ProjectsScreen.dart';
 import 'package:manageus_flutter/screens/Admin/TasksScreen.dart';
+import 'package:manageus_flutter/screens/User/PartnersView.dart';
+import 'package:manageus_flutter/screens/User/ProjectsView.dart';
 import 'package:manageus_flutter/screens/User/TasksView.dart';
 import 'package:manageus_flutter/services/auth.dart';
 
@@ -44,7 +46,7 @@ class _UserHomeState extends State<UserHome> {
                 children: <Widget>[
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, ProjectsScreen.id);
+                      Navigator.pushNamed(context, ProjectsView.id);
                     },
                     child: Container(
                       height: 150.0,
@@ -70,7 +72,7 @@ class _UserHomeState extends State<UserHome> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, PartnersScreen.id);
+                      Navigator.pushNamed(context, PartnersView.id);
                     },
                     child: Container(
                       height: 150.0,

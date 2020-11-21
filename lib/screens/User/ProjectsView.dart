@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:manageus_flutter/screens/Admin/Partner/AddP.dart';
-import 'package:manageus_flutter/screens/Admin/Partner/UpdatePartner.dart';
-import 'package:manageus_flutter/screens/Admin/Partner/PartnerInfo.dart';
+import 'package:manageus_flutter/screens/Admin/Project/ProjectInfo.dart';
+import 'package:manageus_flutter/screens/Admin/Project/AddProject.dart';
 
 
 void main() {
 
   runApp(MaterialApp(
-    home: PartnersScreen(),
+    home: ProjectsView(),
   ));
 }
 
-class PartnersScreen extends StatelessWidget {
-  static String id = 'PartnersScreen';
+class ProjectsView extends StatelessWidget {
+  static String id = 'ProjectsView';
 
   @override
   Widget build(BuildContext context) {
@@ -46,23 +46,25 @@ class _MyHomePageState extends State<MyHomePage> {
   final db = Firestore.instance;
   //final _formKey = GlobalKey<FormState>();
   String name;
-  String project;
+  String desc;
+  String location;
+  String category;
 
   //create function for delete one register
   void deleteData(DocumentSnapshot doc) async {
-    await db.collection('Partners').document(doc.documentID).delete();
+    await db.collection('Projects').document(doc.documentID).delete();
     setState(() => id = null);
   }
 
-  //create tha funtion navigateToDetail
-  navigateToDetail(DocumentSnapshot ds) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MyUpdatePage(
-              ds: ds,
-            )));
-  }
+  // //create tha funtion navigateToDetail
+  // navigateToDetail(DocumentSnapshot ds) {
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (context) => MyUpdatePage(
+  //             ds: ds,
+  //           )));
+  // }
 
   navigateToInfo(DocumentSnapshot ds) {
     Navigator.push(
@@ -80,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       backgroundColor: Colors.black,
       body: StreamBuilder(
-          stream: Firestore.instance.collection("Partners").snapshots(),
+          stream: Firestore.instance.collection("Projects").snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (!snapshot.hasData) {
               return Text('"Loading...');
@@ -103,7 +105,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Row(
                             children: <Widget>[
                               InkWell(
-                                onTap: () => navigateToDetail(doc),
+                                // onTap: () => navigateToDetail(doc),
                                 child: new Container(
                                   child: Image.network(
                                     '${doc.data()['image']}' + '?alt=media',
@@ -124,11 +126,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                 ),
                               ),
                               subtitle: Text(
-                                doc.data()['project'],
+                                doc.data()['desc'],
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 12.0),
                               ),
-                              onTap: () => navigateToDetail(doc),
+                              // onTap: () => navigateToDetail(doc),
                             ),
                           ),
                           Divider(),
@@ -138,13 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               Container(
                                 child: new Row(
                                   children: <Widget>[
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.amber,
-                                      ),
-                                      onPressed: () => deleteData(doc), //funciona
-                                    ),
+
                                     IconButton(
                                       icon: Icon(
                                         Icons.remove_red_eye,
@@ -164,17 +160,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
             );
           }
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.amber,
-        onPressed: () {
-          Route route = MaterialPageRoute(builder: (context) => MyAddPage());
-          Navigator.push(context, route);
-        },
       ),
     );
   }

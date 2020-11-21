@@ -1,47 +1,28 @@
 import 'dart:io';
+import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart'; //formateo hora
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:manageus_flutter/widgets/CustomTextField.dart';
 
 File image;
 String filename;
 
-void main() {
-  runApp(MaterialApp(
-    home: AddProject(),
-  ));
-}
-
-class AddProject extends StatelessWidget {
-  static String id = 'AddProject';
-
+class MyUpdatePage extends StatefulWidget {
+  static String id = 'UpdateProject';
+  final DocumentSnapshot ds;
+  MyUpdatePage({this.ds});
   @override
-  Widget build(BuildContext context) {
-    return new MaterialApp(
-      title: 'Add Page',
-      theme: new ThemeData(
-        primarySwatch: Colors.red,
-      ),
-      home: new MyAddPage(),
-    );
-  }
+  _MyUpdatePageState createState() => _MyUpdatePageState();
 }
 
-class CommonThings {
-  static Size size;
-}
-
-class MyAddPage extends StatefulWidget {
-  @override
-  _MyAddPageState createState() => _MyAddPageState();
-}
-
-class _MyAddPageState extends State<MyAddPage> {
-  TextEditingController projectInputController ;
+class _MyUpdatePageState extends State<MyUpdatePage> {
+  String productImage;
+  TextEditingController descInputController;
   TextEditingController nameInputController;
+  TextEditingController categoryInputController;
+  TextEditingController locationInputController;
   TextEditingController imageInputController;
 
   String id;
@@ -51,7 +32,6 @@ class _MyAddPageState extends State<MyAddPage> {
   String desc;
   String location;
   String category;
-
 
   pickerCam() async {
     File img = await ImagePicker.pickImage(source: ImageSource.camera);
@@ -79,33 +59,46 @@ class _MyAddPageState extends State<MyAddPage> {
     );
   }
 
-  void createData() async {
-    DateTime now = DateTime.now();
-    String nuevoformato = DateFormat('kk:mm:ss:MMMMd').format(now);
-    var fullImageName = 'nomfoto-$nuevoformato' + '.jpg';
-    var fullImageName2 = 'nomfoto-$nuevoformato' + '.jpg';
+  @override
+  void initState() {
+    super.initState();
+    descInputController =
+    new TextEditingController(text: widget.ds.data()["desc"]);
+    locationInputController =
+    new TextEditingController(text: widget.ds.data()["location"]);
+    categoryInputController =
+    new TextEditingController(text: widget.ds.data()["category"]);
+    nameInputController =
+    new TextEditingController(text: widget.ds.data()["name"]);
+    productImage = widget.ds.data()["image"]; //nuevo
+    print(productImage); //nuevo
+  }
 
+  /*
+  updateData(selectedDoc, newValues) {
+    Firestore.instance
+        .collection('colrecipes')
+        .document(selectedDoc)
+        .updateData(newValues)
+        .catchError((e) {
+      // print(e);
+    });
+  }
+  */
 
-    var part1 =
-        'https://firebasestorage.googleapis.com/v0/b/enactus-5d1fa.appspot.com/o/';
-    var fullPathImage = part1 + fullImageName2;
-    print(fullPathImage);
-
-    if (_formKey.currentState.validate()) {
-      _formKey.currentState.save();
-      DocumentReference ref = await db.collection('Projects').add(
-          {'name': '$name', 'desc': '$desc','location':'$location', 'category':'$category', 'image': '$fullPathImage'});
-      setState(() => id = ref.documentID);
-      Navigator.of(context).pop();
-    }
+  Future getPosts() async {
+    var firestore = Firestore.instance;
+    QuerySnapshot qn = await firestore.collection("Projects").getDocuments();
+    // print();
+    return qn.documents;
   }
 
   @override
   Widget build(BuildContext context) {
-    CommonThings.size = MediaQuery.of(context).size;
-
+    getPosts();
     return Scaffold(
       backgroundColor: Colors.black,
+
       body: ListView(
         padding: EdgeInsets.all(8),
         children: <Widget>[
@@ -126,12 +119,24 @@ class _MyAddPageState extends State<MyAddPage> {
                         padding: new EdgeInsets.all(5.0),
                         child: image == null ? Text('Add') : Image.file(image),
                       ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 2.2),
+                        child: new Container(
+                          height: 0.0,
+                          width: 0.0,
+                          padding: new EdgeInsets.all(5.0),
+                          child: productImage == ''
+                              ? Text('Edit')
+                              : Image.network(productImage + '?alt=media'),
+                        ),
+                      ),
                     ],
                   ),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      Divider(),
                       new IconButton(
                           color: Colors.amber,
                           icon: new Icon(Icons.camera_alt), onPressed: pickerCam),
@@ -144,6 +149,7 @@ class _MyAddPageState extends State<MyAddPage> {
                   SizedBox(height: 15,),
                   Container(
                     child: TextFormField(
+                      controller: nameInputController,
                       decoration: InputDecoration(
                         hintText: "Enter Project Name",
                         prefixIcon: Icon(
@@ -169,11 +175,11 @@ class _MyAddPageState extends State<MyAddPage> {
                       },
                       onSaved: (value) => name = value,
                     ),
-
                   ),
                   SizedBox(height: 15,),
                   Container(
                     child: TextFormField(
+                      controller: descInputController,
                       decoration: InputDecoration(
                         hintText: "Enter Project Description",
                         prefixIcon: Icon(
@@ -194,50 +200,20 @@ class _MyAddPageState extends State<MyAddPage> {
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Please enter project desc';
                         }
                       },
                       onSaved: (value) => desc = value,
                     ),
-
                   ),
                   SizedBox(height: 15,),
                   Container(
                     child: TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "Enter Project Category",
-                        prefixIcon: Icon(
-                          Icons.category,
-                          color: Colors.amber,
-                        ),
-                        filled: true,
-                        fillColor: Colors.white,
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.white)),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.white)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.white)),
-                      ),
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter some text';
-                        }
-                      },
-                      onSaved: (value) => category = value,
-                    ),
-
-                  ),
-                  SizedBox(height: 15,),
-                  Container(
-                    child: TextFormField(
+                      controller: descInputController,
                       decoration: InputDecoration(
                         hintText: "Enter Project Location",
                         prefixIcon: Icon(
-                          Icons.location_on_rounded,
+                          Icons.account_balance,
                           color: Colors.amber,
                         ),
                         filled: true,
@@ -254,19 +230,49 @@ class _MyAddPageState extends State<MyAddPage> {
                       ),
                       validator: (value) {
                         if (value.isEmpty) {
-                          return 'Please enter some text';
+                          return 'Please enter project location';
                         }
                       },
                       onSaved: (value) => location = value,
                     ),
-
                   ),
                   SizedBox(height: 15,),
+                  Container(
+                    child: TextFormField(
+                      controller: descInputController,
+                      decoration: InputDecoration(
+                        hintText: "Enter Project Category",
+                        prefixIcon: Icon(
+                          Icons.account_balance,
+                          color: Colors.amber,
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: Colors.white)),
+                        focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: Colors.white)),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            borderSide: BorderSide(color: Colors.white)),
+                      ),
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter project category';
+                        }
+                      },
+                      onSaved: (value) => category = value,
+                    ),
+                  )
 
                 ],
               ),
             ),
           ),
+          SizedBox(height: 15,),
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -276,10 +282,38 @@ class _MyAddPageState extends State<MyAddPage> {
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)
                 ),
-                onPressed: createData,
-                child: Text('Add Project', style: TextStyle(color: Colors.white)),
+                child: Text('Update'),
+                onPressed: () {
+                  DateTime now = DateTime.now();
+                  String nuevoformato =
+                  DateFormat('kk:mm:ss:MMMMd').format(now);
+                  var fullImageName = 'nomfoto-$nuevoformato' + '.jpg';
+                  var fullImageName2 = 'nomfoto-$nuevoformato' + '.jpg';
+
+                  // final StorageReference ref =
+                  // FirebaseStorage.instance.ref().child(fullImageName);
+                  // final StorageUploadTask task = ref.putFile(image);
+
+                  var part1 =
+                      'https://firebasestorage.googleapis.com/v0/b/enactus-5d1fa.appspot.com/o/'; //esto cambia segun su firestore
+
+                  var fullPathImage = part1 + fullImageName2;
+                  print(fullPathImage);
+                  Firestore.instance
+                      .collection('Projects')
+                      .document(widget.ds.documentID)
+                      .updateData({
+                    'name': nameInputController.text,
+                    'desc': descInputController.text,
+                    'location': locationInputController.text,
+                    'category': categoryInputController.text,
+                    'image': '$fullPathImage'
+                  });
+                  Navigator.of(context).pop(); //regrese a la pantalla anterior
+                },
               ),
-            ],)
+            ],
+          )
         ],
       ),
     );

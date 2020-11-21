@@ -8,6 +8,8 @@ import 'package:manageus_flutter/screens/Admin/PartnersScreen.dart';
 import 'package:manageus_flutter/screens/Admin/Project/AddProject.dart';
 import 'package:manageus_flutter/screens/Admin/ProjectsScreen.dart';
 import 'package:manageus_flutter/screens/Admin/TasksScreen.dart';
+import 'package:manageus_flutter/screens/User/PartnersView.dart';
+import 'package:manageus_flutter/screens/User/ProjectsView.dart';
 import 'package:manageus_flutter/screens/User/TasksView.dart';
 import 'package:manageus_flutter/screens/UserProfile.dart';
 import 'package:manageus_flutter/screens/login_screen.dart';
@@ -55,7 +57,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
           UserProfile.id: (context) => UserProfile(),
           TasksView.id: (context) => TasksView(),
           AddP.id: (context) => AddP(),
-
+          ProjectsView.id: (context) => ProjectsView(),
+          PartnersView.id: (context) => PartnersView(),
         },
       ),
 

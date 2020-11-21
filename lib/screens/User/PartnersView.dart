@@ -8,12 +8,12 @@ import 'package:manageus_flutter/screens/Admin/Partner/PartnerInfo.dart';
 void main() {
 
   runApp(MaterialApp(
-    home: PartnersScreen(),
+    home: PartnersView(),
   ));
 }
 
-class PartnersScreen extends StatelessWidget {
-  static String id = 'PartnersScreen';
+class PartnersView extends StatelessWidget {
+  static String id = 'PartnersView';
 
   @override
   Widget build(BuildContext context) {
@@ -54,15 +54,15 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() => id = null);
   }
 
-  //create tha funtion navigateToDetail
-  navigateToDetail(DocumentSnapshot ds) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => MyUpdatePage(
-              ds: ds,
-            )));
-  }
+  // //create tha funtion navigateToDetail
+  // navigateToDetail(DocumentSnapshot ds) {
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //           builder: (context) => MyUpdatePage(
+  //             ds: ds,
+  //           )));
+  // }
 
   navigateToInfo(DocumentSnapshot ds) {
     Navigator.push(
@@ -103,7 +103,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           Row(
                             children: <Widget>[
                               InkWell(
-                                onTap: () => navigateToDetail(doc),
+                                // onTap: () => navigateToDetail(doc),
                                 child: new Container(
                                   child: Image.network(
                                     '${doc.data()['image']}' + '?alt=media',
@@ -128,7 +128,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 style: TextStyle(
                                     color: Colors.black, fontSize: 12.0),
                               ),
-                              onTap: () => navigateToDetail(doc),
+                              // onTap: () => navigateToDetail(doc),
                             ),
                           ),
                           Divider(),
@@ -138,13 +138,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               Container(
                                 child: new Row(
                                   children: <Widget>[
-                                    IconButton(
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.amber,
-                                      ),
-                                      onPressed: () => deleteData(doc), //funciona
-                                    ),
+
                                     IconButton(
                                       icon: Icon(
                                         Icons.remove_red_eye,
@@ -164,17 +158,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 }
             );
           }
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        backgroundColor: Colors.amber,
-        onPressed: () {
-          Route route = MaterialPageRoute(builder: (context) => MyAddPage());
-          Navigator.push(context, route);
-        },
       ),
     );
   }
